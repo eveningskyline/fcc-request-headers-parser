@@ -11,7 +11,7 @@ var app = express();
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
-    var allowedOrigins = ['https://narrow-plane.gomix.me', 'https://www.freecodecamp.com'];
+    var allowedOrigins = ['https://debonair-caption.glitch.me', 'https://www.freecodecamp.com'];
     var origin = req.headers.origin || '*';
     if(!process.env.XORIG_RESTRICT || allowedOrigins.indexOf(origin) > -1){
          console.log(origin);
@@ -36,6 +36,20 @@ app.route('/_api/package.json')
 app.route('/')
     .get(function(req, res) {
 		  res.sendFile(process.cwd() + '/views/index.html');
+    })
+
+app.route('/api/whoami')
+    .get(function(req, res) {
+		  var whoAmIObj = undefined
+      var myJSON = undefined
+      var dateToReturn = null
+
+      whoAmIObj = { "ipaddress": req.headers['x-forwarded-for'].split(',')[0];}
+  
+      myJSON = JSON.stringify(whoAmIObj);
+      res.end(myJSON);
+
+      
     })
 
 // Respond not found to all the wrong routes
