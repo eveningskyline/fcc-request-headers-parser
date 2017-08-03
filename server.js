@@ -8,6 +8,7 @@
 var fs = require('fs');
 var express = require('express');
 var app = express();
+const os = require('os');
 
 if (!process.env.DISABLE_XORIGIN) {
   app.use(function(req, res, next) {
@@ -43,8 +44,18 @@ app.route('/api/whoami')
 		  var whoAmIObj = undefined
       var myJSON = undefined
       var dateToReturn = null
+      
+      var ipAddress = req.headers["x-forwarded-for"]
+      var addresses = ipAddress.split(',')
+      ipAddress = addresses[0]
+  
+      var userLanguage = req.headers["accept-language"]
+      var userLanguages = userLanguage.split(',')
+      userLanguage = userLanguages[0]
 
-      whoAmIObj = { "ipaddress": req.headers['x-forwarded-for'].split(',')[0];}
+      whoAmIObj = { "ipaddress": ipAddress,
+                  "language": userLanguage,
+                  "software": req.headers}
   
       myJSON = JSON.stringify(whoAmIObj);
       res.end(myJSON);
